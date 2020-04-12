@@ -1,21 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace EF_core_Assignment.Models
 {
     public class Exercise
     {
-        public int ExerciseId { get; set; }
-        public string help_where { get; set; }
+        // Defined as composite key in fluent api
+        [MaxLength(64)]
         public string lecture { get; set; }
+        public int number { get; set; }
 
-        // Missing munber.. Number.. something.. See ef diagram
 
-        public int TeacherId { get; set; }
+        [MaxLength(128)]
+        public string help_where { get; set; }
+
+
+
+        public int teacherAuId { get; set; }
         public Teacher Teacher { get; set; }
 
-        public int AuId { get; set; }
+        public int studentAuId { get; set; }
         public Student Student { get; set; }
 
 

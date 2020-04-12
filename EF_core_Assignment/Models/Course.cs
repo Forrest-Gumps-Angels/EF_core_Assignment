@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace EF_core_Assignment.Models
 {
     public class Course
     {
-        
+        [Required]
+        public int courseId { get; set; }
+        public string name { get; set; }
 
-        // Do later 
-
-        //public override string ToString()
-        //{
-        //    return string.Format("Laptop({0}, {1}, {2}, {3}, {4}, {6}, {5})", LaptopId, Speed, Hd, Price, Price, Product, Screen);
-        //}
-
+        public List<Attends> studentsInCourse { get; set; }
+        public List<Assignment> Assignments { get; set; }
+        public List<Teacher> Teachers { get; set; }
     }
 }
 
