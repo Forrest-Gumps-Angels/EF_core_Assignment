@@ -2,7 +2,7 @@
 
 namespace EF_core_Assignment.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class initialMig : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -11,7 +11,7 @@ namespace EF_core_Assignment.Migrations
                 columns: table => new
                 {
                     courseId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Sqlite:Autoincrement", true),
                     name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -24,7 +24,7 @@ namespace EF_core_Assignment.Migrations
                 columns: table => new
                 {
                     AuID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Sqlite:Autoincrement", true),
                     name = table.Column<string>(maxLength: 64, nullable: true),
                     email = table.Column<string>(maxLength: 64, nullable: true)
                 },
@@ -38,7 +38,7 @@ namespace EF_core_Assignment.Migrations
                 columns: table => new
                 {
                     AuID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Sqlite:Autoincrement", true),
                     name = table.Column<string>(maxLength: 64, nullable: true),
                     CourseId = table.Column<int>(nullable: false)
                 },
@@ -84,7 +84,7 @@ namespace EF_core_Assignment.Migrations
                 columns: table => new
                 {
                     AssignmentId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Sqlite:Autoincrement", true),
                     AssignmentName = table.Column<string>(nullable: true),
                     courseId = table.Column<int>(nullable: false),
                     teacherAuId = table.Column<int>(nullable: false),

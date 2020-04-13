@@ -3,42 +3,38 @@ using System;
 using EF_core_Assignment.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EF_core_Assignment.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200413072722_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20200413105235_initialMig")]
+    partial class initialMig
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.3")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "3.1.3");
 
             modelBuilder.Entity("EF_core_Assignment.Models.Assignment", b =>
                 {
                     b.Property<int>("AssignmentId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("AssignmentName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("StudentAuID")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("courseId")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("teacherAuId")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("AssignmentId");
 
@@ -54,16 +50,16 @@ namespace EF_core_Assignment.Migrations
             modelBuilder.Entity("EF_core_Assignment.Models.Attends_shadowtab", b =>
                 {
                     b.Property<int>("studentAuId")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("courseId")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("active")
-                        .HasColumnType("bit");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("semester")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("studentAuId", "courseId");
 
@@ -76,11 +72,10 @@ namespace EF_core_Assignment.Migrations
                 {
                     b.Property<int>("courseId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("courseId");
 
@@ -90,21 +85,21 @@ namespace EF_core_Assignment.Migrations
             modelBuilder.Entity("EF_core_Assignment.Models.Exercise", b =>
                 {
                     b.Property<string>("lecture")
-                        .HasColumnType("nvarchar(64)")
+                        .HasColumnType("TEXT")
                         .HasMaxLength(64);
 
                     b.Property<int>("number")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("help_where")
-                        .HasColumnType("nvarchar(128)")
+                        .HasColumnType("TEXT")
                         .HasMaxLength(128);
 
                     b.Property<int>("studentAuId")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("teacherAuId")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("lecture", "number");
 
@@ -118,10 +113,10 @@ namespace EF_core_Assignment.Migrations
             modelBuilder.Entity("EF_core_Assignment.Models.HelpRequest_shadowtab", b =>
                 {
                     b.Property<int>("AssignmentId")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("StudentId")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("AssignmentId", "StudentId");
 
@@ -134,15 +129,14 @@ namespace EF_core_Assignment.Migrations
                 {
                     b.Property<int>("AuID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("email")
-                        .HasColumnType("nvarchar(64)")
+                        .HasColumnType("TEXT")
                         .HasMaxLength(64);
 
                     b.Property<string>("name")
-                        .HasColumnType("nvarchar(64)")
+                        .HasColumnType("TEXT")
                         .HasMaxLength(64);
 
                     b.HasKey("AuID");
@@ -154,14 +148,13 @@ namespace EF_core_Assignment.Migrations
                 {
                     b.Property<int>("AuID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("CourseId")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("name")
-                        .HasColumnType("nvarchar(64)")
+                        .HasColumnType("TEXT")
                         .HasMaxLength(64);
 
                     b.HasKey("AuID");
@@ -223,13 +216,13 @@ namespace EF_core_Assignment.Migrations
             modelBuilder.Entity("EF_core_Assignment.Models.HelpRequest_shadowtab", b =>
                 {
                     b.HasOne("EF_core_Assignment.Models.Assignment", "Assignment")
-                        .WithMany("StudentAssignments")
+                        .WithMany("AssignmentReq")
                         .HasForeignKey("AssignmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("EF_core_Assignment.Models.Student", "Student")
-                        .WithMany("StudentAssignments")
+                        .WithMany("StudentReq")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

@@ -6,11 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20200413072128_InitialCreate.cs" />
-    <Compile Remove="Migrations\20200413072128_InitialCreate.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="Models\NewFile1.txt" />
   </ItemGroup>
 

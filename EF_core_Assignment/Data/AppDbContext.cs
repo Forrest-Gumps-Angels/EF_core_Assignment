@@ -13,6 +13,7 @@ namespace EF_core_Assignment.Data
         public DbSet<Student> students { get; set; }
         public DbSet<Course> courses { get; set; }
         public DbSet<Teacher> teachers { get; set; }
+        public DbSet<Assignment> assignments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder mb)
         {
@@ -53,7 +54,7 @@ namespace EF_core_Assignment.Data
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-                => options.UseSqlServer("Data Source=helprequests.db").EnableSensitiveDataLogging();
+                => options.UseSqlite("Data Source=helprequests.db").EnableSensitiveDataLogging();
 
     }
 }

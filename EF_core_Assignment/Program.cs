@@ -30,6 +30,27 @@ namespace EF_core_Assignment
 
         private static void SeedDatabase(AppDbContext context)
         {
+
+            // COURSES \\
+            Course course1 = new Course()
+            {
+                courseId = 1,
+                name = "DAB"
+            };
+
+
+            Course course2 = new Course()
+            {
+                courseId = 2,
+                name = "NGK"
+            };
+
+            Course course3 = new Course()
+            {
+                courseId = 3,
+                name = "SWD",
+            };
+
             // STUDENTS \\
             Student student1 = new Student()
             {
@@ -52,25 +73,7 @@ namespace EF_core_Assignment
                 email = "201817065@post.au.dk"
             };
 
-            // COURSES \\
-            Course course1 = new Course()
-            {
-                courseId = 1,
-                name = "DAB"
-            };
-
-
-            Course course2 = new Course()
-            {
-                courseId = 2,
-                name = "NGK"
-            };
-
-            Course course3 = new Course()
-            {
-                courseId = 3,
-                name = "SWD",
-            };
+            
 
             // TEACHERS \\
             Teacher teacher1 = new Teacher()
@@ -281,26 +284,28 @@ namespace EF_core_Assignment
             /////////////////
             //   CONTEXT   //
             /////////////////
+            ///
 
-            context.Add(student1);
-            context.Add(student2);
-            context.Add(student3);
 
-            context.Add(course1);
-            context.Add(course2);
-            context.Add(course3);
+            context.courses.Add(course1);
+            context.courses.Add(course2);
+            context.courses.Add(course3);
 
-            context.Add(teacher1);
-            context.Add(teacher2);
-            context.Add(teacher3);
+            context.students.Add(student1);
+            context.students.Add(student2);
+            context.students.Add(student3);
 
-            context.Add(exercise1);
-            context.Add(exercise2);
-            context.Add(exercise3);
+            context.teachers.Add(teacher1);
+            context.teachers.Add(teacher2);
+            context.teachers.Add(teacher3);
 
-            context.Add(assignment1);
-            context.Add(assignment2);
-            context.Add(assignment3);
+            context.exercises.Add(exercise1);
+            context.exercises.Add(exercise2);
+            context.exercises.Add(exercise3);
+
+            context.assignments.Add(assignment1);
+            context.assignments.Add(assignment2);
+            context.assignments.Add(assignment3);
 
             context.SaveChanges();
             System.Console.WriteLine("Data saved");
