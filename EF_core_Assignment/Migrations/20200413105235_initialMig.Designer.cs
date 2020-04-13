@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EF_core_Assignment.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200413184409_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20200413105235_initialMig")]
+    partial class initialMig
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -44,7 +44,7 @@ namespace EF_core_Assignment.Migrations
 
                     b.HasIndex("teacherAuId");
 
-                    b.ToTable("assignments");
+                    b.ToTable("Assignment");
                 });
 
             modelBuilder.Entity("EF_core_Assignment.Models.Attends_shadowtab", b =>
@@ -91,9 +91,6 @@ namespace EF_core_Assignment.Migrations
                     b.Property<int>("number")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("courseID")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("help_where")
                         .HasColumnType("TEXT")
                         .HasMaxLength(128);
@@ -105,8 +102,6 @@ namespace EF_core_Assignment.Migrations
                         .HasColumnType("INTEGER");
 
                     b.HasKey("lecture", "number");
-
-                    b.HasIndex("courseID");
 
                     b.HasIndex("studentAuId");
 
@@ -205,12 +200,6 @@ namespace EF_core_Assignment.Migrations
 
             modelBuilder.Entity("EF_core_Assignment.Models.Exercise", b =>
                 {
-                    b.HasOne("EF_core_Assignment.Models.Course", "Course")
-                        .WithMany("Exercises")
-                        .HasForeignKey("courseID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("EF_core_Assignment.Models.Student", "Student")
                         .WithMany("Exercises")
                         .HasForeignKey("studentAuId")
