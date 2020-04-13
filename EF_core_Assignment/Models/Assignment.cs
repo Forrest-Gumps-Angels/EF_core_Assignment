@@ -11,20 +11,14 @@ namespace EF_core_Assignment.Models
         public string AssignmentName { get; set; }
 
 
-        public List<Student> Students { get; set; }
-
         public int courseId { get; set; }
         public Course Course { get; set; }
 
         public int teacherAuId { get; set; }
         public Teacher Teacher { get; set; }
 
-        public int studentAuId { get; set; }
-        public Student Student { get; set; }
-
-
-
-
+        //Junction table between Student and Assignment with N-N relationship
+        public List<HelpRequest_shadowtab> AssignmentReq { get; set; }
 
         // Do later 
 
