@@ -13,16 +13,19 @@ namespace EF_core_Assignment.Data
         public DbSet<Student> students { get; set; }
         public DbSet<Course> courses { get; set; }
         public DbSet<Teacher> teachers { get; set; }
+        public DbSet<Assignment> assignments { get; set; }
+        //public DbSet<HelpRequest> helpRequests { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder mb)
         {
             //Creating composite keys 
             mb.Entity<Exercise>()
-            .HasKey(a => new { a.lecture, a.number });
+                .HasKey(a => new { a.lecture, a.number });
 
             //Creating N - N relationship
             mb.Entity<Attends_shadowtab>()
-            .HasKey(a => new { a.studentAuId, a.courseId });
+                .HasKey(a => new { a.studentAuId, a.courseId });
             mb.Entity<Attends_shadowtab>()
                 .HasOne(att => att.Student)
                 .WithMany(stud => stud.attendsCourses)
@@ -53,7 +56,7 @@ namespace EF_core_Assignment.Data
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-                => options.UseSqlServer("Data Source=helprequests.db").EnableSensitiveDataLogging();
+                => options.UseSqlite("Data Source=helprequests.db").EnableSensitiveDataLogging();
 
     }
 }

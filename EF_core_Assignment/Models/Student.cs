@@ -17,7 +17,7 @@ namespace EF_core_Assignment.Models
 
         public List<Exercise> Exercises { get; set; }
         public List<Attends_shadowtab> attendsCourses { get; set; }
-        public List<Assignment> Assignments { get; set; }
+        //public List<Assignment> Assignments { get; set; }
 
         //Junction table between Student and Assignment with N-N relationship
         public List<HelpRequest_shadowtab> StudentReq { get; set; }
@@ -25,10 +25,10 @@ namespace EF_core_Assignment.Models
 
         // Do later 
 
-        //public override string ToString()
-        //{
-        //    return string.Format("Laptop({0}, {1}, {2}, {3}, {4}, {6}, {5})", LaptopId, Speed, Hd, Price, Price, Product, Screen);
-        //}
+        public override string ToString()
+        {
+            return string.Format($"Student({name}, {AuID}, {email})");
+        }
 
     }
 }

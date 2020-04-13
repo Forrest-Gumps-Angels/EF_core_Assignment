@@ -2,7 +2,7 @@
 
 namespace EF_core_Assignment.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -11,7 +11,7 @@ namespace EF_core_Assignment.Migrations
                 columns: table => new
                 {
                     courseId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Sqlite:Autoincrement", true),
                     name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -24,7 +24,7 @@ namespace EF_core_Assignment.Migrations
                 columns: table => new
                 {
                     AuID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Sqlite:Autoincrement", true),
                     name = table.Column<string>(maxLength: 64, nullable: true),
                     email = table.Column<string>(maxLength: 64, nullable: true)
                 },
@@ -38,7 +38,7 @@ namespace EF_core_Assignment.Migrations
                 columns: table => new
                 {
                     AuID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Sqlite:Autoincrement", true),
                     name = table.Column<string>(maxLength: 64, nullable: true),
                     CourseId = table.Column<int>(nullable: false)
                 },
@@ -80,11 +80,11 @@ namespace EF_core_Assignment.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Assignment",
+                name: "assignments",
                 columns: table => new
                 {
                     AssignmentId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Sqlite:Autoincrement", true),
                     AssignmentName = table.Column<string>(nullable: true),
                     courseId = table.Column<int>(nullable: false),
                     teacherAuId = table.Column<int>(nullable: false),
@@ -92,21 +92,21 @@ namespace EF_core_Assignment.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Assignment", x => x.AssignmentId);
+                    table.PrimaryKey("PK_assignments", x => x.AssignmentId);
                     table.ForeignKey(
-                        name: "FK_Assignment_students_StudentAuID",
+                        name: "FK_assignments_students_StudentAuID",
                         column: x => x.StudentAuID,
                         principalTable: "students",
                         principalColumn: "AuID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Assignment_courses_courseId",
+                        name: "FK_assignments_courses_courseId",
                         column: x => x.courseId,
                         principalTable: "courses",
                         principalColumn: "courseId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Assignment_teachers_teacherAuId",
+                        name: "FK_assignments_teachers_teacherAuId",
                         column: x => x.teacherAuId,
                         principalTable: "teachers",
                         principalColumn: "AuID",
@@ -121,11 +121,18 @@ namespace EF_core_Assignment.Migrations
                     number = table.Column<int>(nullable: false),
                     help_where = table.Column<string>(maxLength: 128, nullable: true),
                     teacherAuId = table.Column<int>(nullable: false),
-                    studentAuId = table.Column<int>(nullable: false)
+                    studentAuId = table.Column<int>(nullable: false),
+                    courseID = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_exercises", x => new { x.lecture, x.number });
+                    table.ForeignKey(
+                        name: "FK_exercises_courses_courseID",
+                        column: x => x.courseID,
+                        principalTable: "courses",
+                        principalColumn: "courseId",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_exercises_students_studentAuId",
                         column: x => x.studentAuId,
@@ -151,9 +158,9 @@ namespace EF_core_Assignment.Migrations
                 {
                     table.PrimaryKey("PK_HelpRequest_shadowtab", x => new { x.AssignmentId, x.StudentId });
                     table.ForeignKey(
-                        name: "FK_HelpRequest_shadowtab_Assignment_AssignmentId",
+                        name: "FK_HelpRequest_shadowtab_assignments_AssignmentId",
                         column: x => x.AssignmentId,
-                        principalTable: "Assignment",
+                        principalTable: "assignments",
                         principalColumn: "AssignmentId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -165,24 +172,29 @@ namespace EF_core_Assignment.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Assignment_StudentAuID",
-                table: "Assignment",
+                name: "IX_assignments_StudentAuID",
+                table: "assignments",
                 column: "StudentAuID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Assignment_courseId",
-                table: "Assignment",
+                name: "IX_assignments_courseId",
+                table: "assignments",
                 column: "courseId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Assignment_teacherAuId",
-                table: "Assignment",
+                name: "IX_assignments_teacherAuId",
+                table: "assignments",
                 column: "teacherAuId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Attends_shadowtab_courseId",
                 table: "Attends_shadowtab",
                 column: "courseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_exercises_courseID",
+                table: "exercises",
+                column: "courseID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_exercises_studentAuId",
@@ -217,7 +229,7 @@ namespace EF_core_Assignment.Migrations
                 name: "HelpRequest_shadowtab");
 
             migrationBuilder.DropTable(
-                name: "Assignment");
+                name: "assignments");
 
             migrationBuilder.DropTable(
                 name: "students");

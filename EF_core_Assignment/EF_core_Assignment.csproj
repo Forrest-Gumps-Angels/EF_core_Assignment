@@ -6,8 +6,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20200413072128_InitialCreate.cs" />
-    <Compile Remove="Migrations\20200413072128_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20200413164146_InitialMigration.cs" />
+    <Compile Remove="Migrations\20200413164146_InitialMigration.Designer.cs" />
+    <Compile Remove="Migrations\20200413164342_InitialMigration.cs" />
+    <Compile Remove="Migrations\20200413164342_InitialMigration.Designer.cs" />
+    <Compile Remove="Migrations\20200413181526_InitialMigration.cs" />
+    <Compile Remove="Migrations\20200413181526_InitialMigration.Designer.cs" />
+    <Compile Remove="Migrations\20200413183658_InitialMigration.cs" />
+    <Compile Remove="Migrations\20200413183658_InitialMigration.Designer.cs" />
+    <Compile Remove="Migrations\20200413184155_InitialMigration.cs" />
+    <Compile Remove="Migrations\20200413184155_InitialMigration.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

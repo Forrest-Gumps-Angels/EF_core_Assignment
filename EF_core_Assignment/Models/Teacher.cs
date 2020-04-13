@@ -22,12 +22,11 @@ namespace EF_core_Assignment.Models
         public List<Assignment> Assignments { get; set; }
 
 
-        // Do later 
 
-        //public override string ToString()
-        //{
-        //    return string.Format("Laptop({0}, {1}, {2}, {3}, {4}, {6}, {5})", LaptopId, Speed, Hd, Price, Price, Product, Screen);
-        //}
+        public override string ToString()
+        {
+            return string.Format($"Teacher({name}, {AuID})");
+        }
 
     }
 }

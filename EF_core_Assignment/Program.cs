@@ -9,27 +9,477 @@ namespace EF_core_Assignment
 {
     class Program
     {
+        static bool running = true;
+        static bool running2 = true;
+
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
-
+            Console.WriteLine("Press B for browsing database and A to add to database: ");
+            var consoleKeyInfo1 = Console.ReadKey().KeyChar;
 
             using (var context = new AppDbContext())
             {
-                System.Console.WriteLine("Should we seed data? Y/n");
-                ConsoleKeyInfo consoleKeyInfo = Console.ReadKey();
-                if (consoleKeyInfo.KeyChar == 'Y')
+                switch(char.ToUpper(consoleKeyInfo1))
                 {
-                    SeedDatabase(context);
+                    case 'B':
+                        SeedDatabase(context);
+                        Browse();
+                        break;
+                    case 'A':
+                        SeedDatabase(context);
+                        Add();
+                        break;
+                }           
+            }
+        }
+
+        static private void Browse()
+        {
+            while (running)
+            {
+
+                System.Console.WriteLine("Find information from Teacher auid(T), Course name(C), Student auid(S). Quit(Q)");
+                var consoleKeyInfo2 = Console.ReadKey();
+                using (var context = new AppDbContext())
+                {
+                    Dispatcher(context, consoleKeyInfo2.KeyChar);
+                }
+            }
+
+            System.Console.WriteLine("Quiting...");
+        }
+
+        static private void Add()
+        {
+            while (running2)
+            {
+                System.Console.WriteLine("Add information for Course(C), Student(S), Teacher(T), Assignment(A), Exercise(E), Review(R), Help Request(H) and Quit(Q)");
+                var consoleKeyInfo3 = Console.ReadKey();
+                using (var context = new AppDbContext())
+                {
+                    DispatcherAdd(context, consoleKeyInfo3.KeyChar);
+                }
+            }
+        }
+
+        static private void DispatcherAdd(AppDbContext context, char key)
+        {
+            switch(char.ToUpper(key))
+            {
+                case 'Q':
+                    running2 = false;
+                    break;
+                case 'C':
+                    AddCourse(context);
+                    break;
+                case 'S':
+                    AddStudent(context);
+                    break;
+                case 'T':
+                    AddTeacher(context);
+                    break;
+                case 'A':
+                    AddAssignment(context);
+                    break;
+                case 'E':
+                    AddExercise(context);
+                    break;
+                case 'R':
+                    //AddReview(context);
+                    break;
+                case 'H':
+                    AddHelpRequest(context);
+                    break;
+                default:
+                    Console.WriteLine("Input not accepted.");
+                    break;
+            }
+        }
+
+        static private void AddCourse(AppDbContext context)
+        {
+            
+            Console.WriteLine("Adding Course...");
+            var course = new Course();
+
+            Console.WriteLine("Name: ");
+            var Cname = Console.ReadLine();
+            course.name = Cname;
+
+            Console.WriteLine("ID: ");
+            var ID = Console.ReadLine();
+            course.courseId = int.Parse(ID);
+
+            Console.WriteLine("Select Students (Y when done): ");
+
+            var SelectedStudents = ListSelector<Student>(context.students, true);
+            var attendList = new List<Attends_shadowtab>();
+            foreach (var stud in SelectedStudents)
+            {
+                attendList.Add(new Attends_shadowtab()
+                {
+                    active = true,
+                    Course = course,
+                    courseId = course.courseId,
+                    semester = ((Func<int>) (()=> 
+                    {
+                        Console.Write($"Input semester for {stud}:");
+                        int.TryParse(Console.ReadLine(), out int n);
+                        Console.WriteLine();
+                        return n;
+                    }))(),
+                    Student = stud,
+                    studentAuId = stud.AuID
+                });
+            }
+
+            Console.WriteLine("Select Assignments (Y when done): ");
+            var SelectedAssignments = ListSelector<Assignment>(context.assignments, true);
+            course.Assignments = SelectedAssignments;
+
+            Console.WriteLine("Select Teachers (Y when done): ");
+            var SelectedTeacher = ListSelector<Teacher>(context.teachers, true);
+            course.Teachers = SelectedTeacher;
+
+            Console.WriteLine("Select Exercises (Y when done): ");
+            var SelectedExercises = ListSelector<Exercise>(context.exercises, true);
+            course.Exercises = SelectedExercises;
+
+            context.Add(course);
+            context.SaveChanges();
+            Console.WriteLine($"Successfully added Course: {course}");
+        }
+
+
+
+        static private void AddStudent(AppDbContext context)
+        {
+            Console.WriteLine("Adding Student...");
+            var student = new Student();
+
+            Console.WriteLine("Name: ");
+            var Cname = Console.ReadLine();
+            student.name = Cname;
+
+            Console.WriteLine("Email: ");
+            var Cemail = Console.ReadLine();
+            student.email = Cemail;
+
+            Console.WriteLine("AuId: ");
+            var ID = Console.ReadLine();
+            student.AuID = int.Parse(ID);
+
+            Console.WriteLine("Select Assignment (Y when done): ");
+
+            var SelectedAssignment = ListSelector<Assignment>(context.assignments, true);
+            var helpRequest_Shadowtabs = new List<HelpRequest_shadowtab>();
+            foreach (var assign in SelectedAssignment)
+            {
+                helpRequest_Shadowtabs.Add(new HelpRequest_shadowtab()
+                {
+                    Assignment = assign,
+                    AssignmentId = assign.AssignmentId,
+                    Student = student,
+                    StudentId = student.AuID
+                });
+            }
+
+            Console.WriteLine("Select Exercises (Y when done): ");
+            var SelectedExercises = ListSelector<Exercise>(context.exercises, true);
+            student.Exercises = SelectedExercises;
+
+            Console.WriteLine("Select Courses (Y when done): ");
+
+            var SelectedCourses = ListSelector<Course>(context.courses, true);
+            var AttendList = new List<Attends_shadowtab>();
+            foreach (var course in SelectedCourses)
+            {
+                AttendList.Add(new Attends_shadowtab()
+                {
+                    active = true,
+                    Course = course,
+                    courseId = course.courseId,
+                    semester = ((Func<int>)(() =>
+                    {
+                        Console.Write($"Input semester for {student}:");
+                        int.TryParse(Console.ReadLine(), out int n);
+                        Console.WriteLine();
+                        return n;
+                    }))(),
+                    Student = student,
+                    studentAuId = student.AuID
+                });
+            }
+
+
+
+            context.Add(student);
+            context.SaveChanges();
+            Console.WriteLine($"Successfully added Student: {student}");
+        }
+
+        static private void AddTeacher(AppDbContext context)
+        {
+            Console.WriteLine("Adding Teacher...");
+            var teacher = new Teacher();
+
+            Console.WriteLine("Name: ");
+            var Cname = Console.ReadLine();
+            teacher.name = Cname;
+
+            Console.WriteLine("AuId: ");
+            var ID = Console.ReadLine();
+            teacher.AuID = int.Parse(ID);
+
+
+            Console.WriteLine("Select Exercises (Y when done): ");
+            var SelectedExercises = ListSelector<Exercise>(context.exercises, true);
+            teacher.Exercises = SelectedExercises;
+
+            Console.WriteLine("Select Assignments (Y when done): ");
+            var SelectedAssignments = ListSelector<Assignment>(context.assignments, true);
+            teacher.Assignments = SelectedAssignments;
+
+            Console.WriteLine("Select Course (Y if none): ");
+            var SelectedCourse = ListSelector<Course>(context.courses, false);
+            teacher.CourseId = SelectedCourse[0].courseId;
+            teacher.Course = SelectedCourse[0];
+
+
+            context.Add(teacher);
+            context.SaveChanges();
+            Console.WriteLine($"Successfully added Teacher: {teacher}");
+        }
+
+        static private void AddAssignment(AppDbContext context)
+        {
+            Console.WriteLine("Adding Assignment...");
+            var assignment = new Assignment();
+
+            Console.WriteLine("Name: ");
+            var Cname = Console.ReadLine();
+            assignment.AssignmentName = Cname;
+
+            Console.WriteLine("Assignment ID: ");
+            var ID = Console.ReadLine();
+            assignment.AssignmentId = int.Parse(ID);
+
+
+            Console.WriteLine("Select Teacher (Y if none): ");
+            var SelectedTeacher = ListSelector<Teacher>(context.teachers, false);
+            assignment.teacherAuId = SelectedTeacher[0].AuID;
+            assignment.Teacher = SelectedTeacher[0];
+
+            Console.WriteLine("Select Course (Y when done): ");
+            var SelectedCourse = ListSelector<Course>(context.courses, true);
+            assignment.courseId = SelectedCourse[0].courseId;
+            assignment.Course = SelectedCourse[0];
+
+
+            var SelectedStudents = ListSelector<Student>(context.students, true);
+            var helpRequest_Shadowtabs = new List<HelpRequest_shadowtab>();
+            foreach (var stud in SelectedStudents)
+            {
+                helpRequest_Shadowtabs.Add(new HelpRequest_shadowtab()
+                {
+                    Assignment = assignment,
+                    AssignmentId = assignment.AssignmentId,
+                    Student = stud,
+                    StudentId = stud.AuID
+                });
+            }
+
+
+
+            context.Add(assignment);
+            context.SaveChanges();
+            Console.WriteLine($"Successfully added Assignment: {assignment}");
+        }
+
+        static private void AddExercise(AppDbContext context)
+        {
+            Console.WriteLine("Adding Exercise...");
+            var exercise = new Exercise();
+
+            Console.WriteLine("Lecture: ");
+            var Cname = Console.ReadLine();
+            exercise.lecture = Cname;
+
+            Console.WriteLine("Number: ");
+            var ID = Console.ReadLine();
+            exercise.number = int.Parse(ID);
+
+            Console.WriteLine("Help where?: ");
+            var help = Console.ReadLine();
+            exercise.help_where = help;
+
+
+            Console.WriteLine("Select Student (Y if none): ");
+            var SelectedStudent = ListSelector<Student>(context.students, false);
+            exercise.studentAuId = SelectedStudent[0].AuID;
+            exercise.Student = SelectedStudent[0];
+
+            Console.WriteLine("Select Teacher (Y if none): ");
+            var SelectedTeacher = ListSelector<Teacher>(context.teachers, false);
+            exercise.teacherAuId = SelectedTeacher[0].AuID;
+            exercise.Teacher = SelectedTeacher[0];
+
+            Console.WriteLine("Select Course (Y if none): ");
+            var SelectedCourse = ListSelector<Course>(context.courses, false);
+            exercise.courseID = SelectedCourse[0].courseId;
+            exercise.Course = SelectedCourse[0];
+
+            context.Add(exercise);
+            context.SaveChanges();
+            Console.WriteLine($"Successfully added Exercise: {exercise}");
+        }
+
+        // Do not know about this one???
+        //static private void AddReview(AppDbContext context)
+        //{
+
+        //}
+
+        static private void AddHelpRequest(AppDbContext context)
+        {
+            Console.WriteLine("This will guide you through setting up a help request.. ");
+            Console.WriteLine("(It is a prerequisite that you have been setup up correctly in the system. \n" +
+                "Eg. that yu have created a Student for yourself and added correct courses)");
+            var exercise = new Exercise();
+
+
+            Console.WriteLine("Please select yourself below (Y when done): ");
+            var SelectedStudent = ListSelector<Student>(context.students, false);
+
+            Console.WriteLine("Please select the specific assignment (Y when done): ");
+            var SelectedAssignment = ListSelector<Assignment>(context.assignments, false);
+
+            Console.WriteLine("Please specify the exercise number: ");
+            int.TryParse(Console.ReadLine(), out int exercisenumber);
+
+            Console.WriteLine("What lecture?: ");
+            var lecture = Console.ReadLine();
+
+            Console.WriteLine("Please describe the problem: ");
+            var help_where = Console.ReadLine();
+
+            exercise.studentAuId = SelectedStudent[0].AuID;
+            exercise.Student = SelectedStudent[0];
+            exercise.help_where = help_where;
+            exercise.lecture = lecture;
+            exercise.number = exercisenumber;
+            exercise.Teacher = SelectedAssignment[0].Teacher;
+            exercise.teacherAuId = SelectedAssignment[0].teacherAuId;
+
+            context.Add(exercise);
+            context.SaveChanges();
+
+            Console.WriteLine($"Successfully added Exercise: {exercise}");
+
+        }
+
+        static private List<T> ListSelector<T>(DbSet<T> dbset, bool continuous) where T : class
+        {
+
+            var outList = new List<T>();
+            var selecting = true;
+            var genericList = dbset.ToList();
+
+            for (int i = 0; i < genericList.Count(); i++)
+            {
+                Console.WriteLine($"[{i}] {genericList[i]}");
+            }
+
+            while (selecting)
+            {
+                var input = Console.ReadLine();
+                if (input == "Y") selecting = false;
+                else if (int.TryParse(input, out int n))
+                {
+                    if (n < genericList.Count())
+                    {
+                        outList.Add(genericList[n]);
+                        Console.WriteLine($"You just added: {genericList[n]}");
+                        selecting = continuous;
+                    }
+                    else Console.WriteLine("Index is invalid");
+                }
+                else
+                {
+                    Console.WriteLine("Try again...");
                 }
 
             }
 
+            return outList;
+        }
+
+        static private void Dispatcher(AppDbContext context, char key)
+        {
+
+            switch(char.ToUpper(key))
+            {
+                case 'Q':
+                    running = false;
+                    break;
+
+                case 'T':
+                    //InfoFromTeacher(context);
+                    break;
+                case 'C':
+                    InfoFromCourse(context);
+                    break;
+                case 'S':
+                    InfoFromStudent(context);
+                    break;
+            }
+        }
+        
+        //static void InfoFromTeacher(AppDbContext context)
+        //{
+        //    System.Console.WriteLine("AuID of given teacher: ");
+        //    var consoleKeyInfo = Int32.Parse(Console.ReadLine());
+        //    foreach (var item in context.teachers.Include((teacher == consoleKeyInfo) => teacher.).ToList())
+        //    {
+        //        //System.Console.WriteLine(p);
+        //    }
+        //}
+
+        static void InfoFromCourse(AppDbContext context)
+        {
+            System.Console.WriteLine("Coursename of the given course. Eg. \"NGK\"");
+            var coursename = Console.ReadLine();
+
+            foreach (var course in context.courses.Where(a => a.name.Contains(coursename)).ToList())
+            {
+                System.Console.WriteLine($"\nThe requests for course: {course}");
+
+                foreach (var assignment in context.assignments.Where(a => a.courseId == course.courseId).ToList())
+                {
+                    System.Console.WriteLine($"\tThe assignment information is: {assignment}");
+                    System.Console.WriteLine($"\tThe responsible teacher information is: {context.teachers.Where(a => a.AuID == assignment.teacherAuId).ToList()[0]}");
+
+                    //foreach (var student in context.students.Where(s => s.AuID == assignment.))
+                    //{
+                    //    Console.WriteLine(student);
+                    //}
+                }
+            }
+
+            Console.WriteLine();
+        }
+
+        static void InfoFromStudent(AppDbContext context)
+        {
+            
         }
 
 
         private static void SeedDatabase(AppDbContext context)
         {
+            context.Database.EnsureDeleted();
+            context.Database.EnsureCreated();
+
             // STUDENTS \\
             Student student1 = new Student()
             {
@@ -135,6 +585,45 @@ namespace EF_core_Assignment
                 AssignmentName = "Lab exercise: SuperSorter"
             };
 
+            //HelpRequest request1 = new HelpRequest()
+            //{
+            //    Course = course1,
+            //    courseId = course1.courseId,
+            //    Exercise = exercise1,
+            //    exerciseId = exercise1.number,
+            //    HelpRequestId = 1,
+            //    Student = student1,
+            //    studentAuId = student1.AuID,
+            //    Teacher = teacher1,
+            //    teacherAuId = teacher1.AuID
+            //};
+
+            //HelpRequest request2 = new HelpRequest()
+            //{
+            //    Course = course2,
+            //    courseId = course2.courseId,
+            //    Exercise = exercise2,
+            //    exerciseId = exercise2.number,
+            //    HelpRequestId = 2,
+            //    Student = student2,
+            //    studentAuId = student2.AuID,
+            //    Teacher = teacher2,
+            //    teacherAuId = teacher2.AuID
+            //};
+
+            //HelpRequest request3 = new HelpRequest()
+            //{
+            //    Course = course3,
+            //    courseId = course3.courseId,
+            //    Exercise = exercise3,
+            //    exerciseId = exercise3.number,
+            //    HelpRequestId = 3,
+            //    Student = student3,
+            //    studentAuId = student3.AuID,
+            //    Teacher = teacher3,
+            //    teacherAuId = teacher3.AuID
+            //};
+
 
             ///////////////////
             // CONNECTIONS //
@@ -223,6 +712,16 @@ namespace EF_core_Assignment
             exercise2.Teacher = teacher2;
             exercise3.Teacher = teacher3;
 
+            // Exercises to Courses \\
+            exercise1.courseID = course1.courseId;
+            exercise1.Course = course1;
+
+            exercise2.courseID = course2.courseId;
+            exercise2.Course = course2;
+
+            exercise3.courseID = course3.courseId;
+            exercise3.Course = course3;
+
             // Teacher to Exercises \\
             teacher1.Exercises = new List<Exercise>() { exercise1 };
             teacher2.Exercises = new List<Exercise>() { exercise2 };
@@ -253,6 +752,11 @@ namespace EF_core_Assignment
             course2.Teachers = new List<Teacher>() { teacher2 };
             course3.Teachers = new List<Teacher>() { teacher3 };
 
+            // Course to exercise \\
+            course1.Exercises = new List<Exercise>() { exercise1 };
+            course2.Exercises = new List<Exercise>() { exercise2 };
+            course3.Exercises = new List<Exercise>() { exercise3 };
+
             // Assignment to Student \\
             assignment1.AssignmentReq = student1.StudentReq;
 
@@ -278,6 +782,7 @@ namespace EF_core_Assignment
             assignment3.Course = course3;
             assignment3.courseId = course3.courseId;
 
+
             /////////////////
             //   CONTEXT   //
             /////////////////
@@ -302,8 +807,12 @@ namespace EF_core_Assignment
             context.Add(assignment2);
             context.Add(assignment3);
 
+            //context.Add(request1);
+            //context.Add(request2);
+            //context.Add(request3);
+
             context.SaveChanges();
-            System.Console.WriteLine("Data saved");
+            System.Console.WriteLine("Data has been seeded");
         }
     }    
 }

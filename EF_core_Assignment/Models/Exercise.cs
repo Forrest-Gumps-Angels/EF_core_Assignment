@@ -24,6 +24,9 @@ namespace EF_core_Assignment.Models
         public int studentAuId { get; set; }
         public Student Student { get; set; }
 
+        public int courseID { get; set; }
+        public Course Course { get; set; }
+
 
         // Do later 
 

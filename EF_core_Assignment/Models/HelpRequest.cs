@@ -20,6 +20,11 @@ namespace EF_core_Assignment.Models
         public int courseId { get; set; }
         public Course Course { get; set; }
 
+        public override string ToString()
+        {
+            return string.Format($"Course({teacherAuId}, {courseId})");
+        }
+
 
     }
 }
