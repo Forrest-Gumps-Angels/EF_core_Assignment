@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace EF_core_Assignment.Models
 {
     public class Student
     {
-        [Required]
+        
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int AuID { get; set; }
         [MaxLength(64)]
         public string name { get; set; }

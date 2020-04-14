@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace EF_core_Assignment.Models
@@ -8,6 +9,7 @@ namespace EF_core_Assignment.Models
     public class Course
     {
         [Required]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int courseId { get; set; }
         public string name { get; set; }
 

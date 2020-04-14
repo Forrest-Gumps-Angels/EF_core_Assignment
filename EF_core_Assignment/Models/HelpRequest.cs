@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace EF_core_Assignment.Models
 {
     public class HelpRequest
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int HelpRequestId { get; set; }
 
         public int studentAuId { get; set; }

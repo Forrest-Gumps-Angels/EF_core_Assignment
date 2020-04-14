@@ -636,7 +636,8 @@ namespace EF_core_Assignment
         private static void SeedDatabase(AppDbContext context)
         {
             //context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
+            //context.Database.EnsureCreated();
+
 
             // STUDENTS \\
             Student student1 = new Student()

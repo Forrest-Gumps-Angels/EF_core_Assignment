@@ -67,12 +67,32 @@ namespace EF_core_Assignment.Data
                 .HasOne(ea => ea.Exercise)
                 .WithMany(e => e.exerciseAssignment_Links)
                 .HasForeignKey(ea => ea.ExerciseNumber);
+
+            // On delete cascade fix
+            mb.Entity<Assignment>()
+                .HasOne(a => a.Teacher)
+                .WithMany(t => t.Assignments)
+                .HasForeignKey(a => a.teacherAuId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            mb.Entity<Exercise>()
+                .HasOne(a => a.Teacher)
+                .WithMany(t => t.Exercises)
+                .HasForeignKey(a => a.teacherAuId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            mb.Entity<ExerciseAssignment_link>()
+                .HasOne(a => a.Exercise)
+                .WithMany(t => t.exerciseAssignment_Links)
+                .HasForeignKey(a => a.ExerciseNumber)
+                .OnDelete(DeleteBehavior.NoAction);
+
         }
 
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-                => options.UseSqlite("Data Source=helprequests.db").EnableSensitiveDataLogging();
+                => options.UseSqlServer("Data Source=172.25.181.113,1433;Initial Catalog=Efcore;Persist Security Info=True;User ID=sa;Password='F?G2Qt8E.;<4vzuV'").EnableSensitiveDataLogging();
 
     }
 }
