@@ -19,8 +19,10 @@ namespace EF_core_Assignment.Models
 
         //Junction table between Student and Assignment with N-N relationship
         public List<HelpRequest_shadowtab> AssignmentReq { get; set; }
+        public List<ExerciseAssignment_link> exerciseAssignment_Links { get; set; }
 
-        // Do later 
+
+
 
         public override string ToString()
         {

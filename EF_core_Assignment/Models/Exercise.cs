@@ -10,13 +10,15 @@ namespace EF_core_Assignment.Models
         // Defined as composite key in fluent api
         [MaxLength(64)]
         public string lecture { get; set; }
+
+        [Key]
         public int number { get; set; }
 
 
         [MaxLength(128)]
         public string help_where { get; set; }
 
-
+        public List<ExerciseAssignment_link> exerciseAssignment_Links { get; set; }
 
         public int teacherAuId { get; set; }
         public Teacher Teacher { get; set; }
@@ -30,10 +32,10 @@ namespace EF_core_Assignment.Models
 
         // Do later 
 
-        //public override string ToString()
-        //{
-        //    return string.Format("Laptop({0}, {1}, {2}, {3}, {4}, {6}, {5})", LaptopId, Speed, Hd, Price, Price, Product, Screen);
-        //}
+        public override string ToString()
+        {
+            return string.Format($"Exercise({number}, {lecture}, {help_where})");
+        }
 
     }
 }

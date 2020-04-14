@@ -12,6 +12,7 @@ namespace EF_core_Assignment.Models
         public string name { get; set; }
 
         public List<Attends_shadowtab> studentsInCourse { get; set; }
+
         public List<Assignment> Assignments { get; set; }
         public List<Teacher> Teachers { get; set; }
         public List<Exercise> Exercises { get; set; }

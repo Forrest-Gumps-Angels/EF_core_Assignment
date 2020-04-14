@@ -38,7 +38,7 @@ namespace EF_core_Assignment
             while (running)
             {
 
-                System.Console.WriteLine("Find information from Teacher auid(T), Course name(C), Student auid(S). Quit(Q)");
+                System.Console.WriteLine("Find information from Teacher auid(T), Course name(C), Student auid(S) or get Statistics(P). Quit(Q)");
                 var consoleKeyInfo2 = Console.ReadKey();
                 using (var context = new AppDbContext())
                 {
@@ -145,9 +145,16 @@ namespace EF_core_Assignment
             var SelectedExercises = ListSelector<Exercise>(context.exercises, true);
             course.Exercises = SelectedExercises;
 
-            context.Add(course);
-            context.SaveChanges();
-            Console.WriteLine($"Successfully added Course: {course}");
+            try
+            {
+                context.Add(course);
+                context.SaveChanges();
+                Console.WriteLine($"Successfully added Course: {course}");
+            }
+            catch
+            {
+                Console.WriteLine($"Error adding: {course}");
+            }
         }
 
 
@@ -212,10 +219,16 @@ namespace EF_core_Assignment
             }
 
 
-
-            context.Add(student);
-            context.SaveChanges();
-            Console.WriteLine($"Successfully added Student: {student}");
+            try
+            {
+                context.Add(student);
+                context.SaveChanges();
+                Console.WriteLine($"Successfully added Student: {student}");
+            }
+            catch
+            {
+                Console.WriteLine($"Error adding: {student}");
+            }
         }
 
         static private void AddTeacher(AppDbContext context)
@@ -245,10 +258,16 @@ namespace EF_core_Assignment
             teacher.CourseId = SelectedCourse[0].courseId;
             teacher.Course = SelectedCourse[0];
 
-
-            context.Add(teacher);
-            context.SaveChanges();
-            Console.WriteLine($"Successfully added Teacher: {teacher}");
+            try
+            {
+                context.Add(teacher);
+                context.SaveChanges();
+                Console.WriteLine($"Successfully added Teacher: {teacher}");
+            }
+            catch
+            {
+                Console.WriteLine($"Error adding: {teacher}");
+            }
         }
 
         static private void AddAssignment(AppDbContext context)
@@ -290,10 +309,17 @@ namespace EF_core_Assignment
             }
 
 
-
-            context.Add(assignment);
-            context.SaveChanges();
-            Console.WriteLine($"Successfully added Assignment: {assignment}");
+            try
+            {
+                context.Add(assignment);
+                context.SaveChanges();
+                Console.WriteLine($"Successfully added Assignment: {assignment}");
+            }
+            catch
+            {
+                Console.WriteLine($"Error adding: {assignment}");
+            }
+            
         }
 
         static private void AddExercise(AppDbContext context)
@@ -329,9 +355,16 @@ namespace EF_core_Assignment
             exercise.courseID = SelectedCourse[0].courseId;
             exercise.Course = SelectedCourse[0];
 
-            context.Add(exercise);
-            context.SaveChanges();
-            Console.WriteLine($"Successfully added Exercise: {exercise}");
+            try
+            {
+                context.Add(exercise);
+                context.SaveChanges();
+                Console.WriteLine($"Successfully added Exercise: {exercise}");
+            }
+            catch
+            {
+                Console.WriteLine($"Error writing: {exercise}");
+            }
         }
 
         // Do not know about this one???
@@ -371,10 +404,17 @@ namespace EF_core_Assignment
             exercise.Teacher = SelectedAssignment[0].Teacher;
             exercise.teacherAuId = SelectedAssignment[0].teacherAuId;
 
-            context.Add(exercise);
-            context.SaveChanges();
+            try
+            {
+                context.Add(exercise);
+                context.SaveChanges();
+                Console.WriteLine($"Successfully added Exercise: {exercise}");
+            }
+            catch
+            {
+                Console.WriteLine($"Error writing: {exercise}");
+            }
 
-            Console.WriteLine($"Successfully added Exercise: {exercise}");
 
         }
 
@@ -424,7 +464,7 @@ namespace EF_core_Assignment
                     break;
 
                 case 'T':
-                    //InfoFromTeacher(context);
+                    InfoFromTeacher(context);
                     break;
                 case 'C':
                     InfoFromCourse(context);
@@ -432,18 +472,63 @@ namespace EF_core_Assignment
                 case 'S':
                     InfoFromStudent(context);
                     break;
+                case 'P':
+                    Statistics(context);
+                    break;
             }
         }
-        
-        //static void InfoFromTeacher(AppDbContext context)
-        //{
-        //    System.Console.WriteLine("AuID of given teacher: ");
-        //    var consoleKeyInfo = Int32.Parse(Console.ReadLine());
-        //    foreach (var item in context.teachers.Include((teacher == consoleKeyInfo) => teacher.).ToList())
-        //    {
-        //        //System.Console.WriteLine(p);
-        //    }
-        //}
+
+        static void InfoFromTeacher(AppDbContext context)
+        {
+            System.Console.WriteLine("AuID of the given teacher. Eg. \"201812345\"");
+            var auid = Console.ReadLine();
+            int.TryParse(auid, out int auid_int);
+
+
+            foreach (var teacher in context.teachers.Where(t => t.AuID == auid_int).ToList())
+            {
+                System.Console.WriteLine($"\nThe requests for teacher: {teacher}");
+
+
+                foreach (var assignment in context.assignments
+                    .Where(a => a.teacherAuId == teacher.AuID)
+                    .Include(assign => assign.Course)
+                    .Include(assign => assign.AssignmentReq)
+                    .Include(assign => assign.exerciseAssignment_Links)
+                    .ToList())
+                {
+                    System.Console.WriteLine($"\tThe assignment information is: {assignment}");
+                    System.Console.WriteLine($"\tThe course information is: {assignment.Course}");
+
+                    Console.WriteLine($"\n\tThe students are: ");
+
+                    //WORKS!
+                    foreach (var asReq in assignment.AssignmentReq)
+                    {
+                        foreach (var stud in context.students.Where(s => s.AuID == asReq.StudentId))
+                        {
+                            Console.WriteLine($"\t\t{stud}");
+                        }
+                    }
+
+                    Console.WriteLine($"\n\tThe exercise information is: ");
+
+                    foreach (var ealink in assignment.exerciseAssignment_Links)
+                    {
+                        foreach (var exercise in context.exercises.Where(e => e.number == ealink.ExerciseNumber))
+                        {
+                            Console.WriteLine($"\t\t{exercise}");
+                        }
+                    }
+
+
+
+
+                }
+            }
+
+            Console.WriteLine();
+        }
 
         static void InfoFromCourse(AppDbContext context)
         {
@@ -454,15 +539,38 @@ namespace EF_core_Assignment
             {
                 System.Console.WriteLine($"\nThe requests for course: {course}");
 
-                foreach (var assignment in context.assignments.Where(a => a.courseId == course.courseId).ToList())
+
+                foreach (var assignment in context.assignments
+                    .Where(a => a.courseId == course.courseId)
+                    .Include(assign => assign.Teacher)
+                    .Include(assign => assign.AssignmentReq)
+                    .Include(assign => assign.exerciseAssignment_Links)
+                    .ToList())
                 {
                     System.Console.WriteLine($"\tThe assignment information is: {assignment}");
-                    System.Console.WriteLine($"\tThe responsible teacher information is: {context.teachers.Where(a => a.AuID == assignment.teacherAuId).ToList()[0]}");
+                    System.Console.WriteLine($"\tThe responsible teacher information is: {assignment.Teacher}");
 
-                    //foreach (var student in context.students.Where(s => s.AuID == assignment.))
-                    //{
-                    //    Console.WriteLine(student);
-                    //}
+                    Console.WriteLine($"\n\tThe students are: ");
+
+                    //WORKS!
+                    foreach (var asReq in assignment.AssignmentReq)
+                    {
+                        foreach (var stud in context.students.Where(s => s.AuID == asReq.StudentId))
+                        {
+                            Console.WriteLine($"\t\t{stud}");
+                        }
+                    }
+
+                    Console.WriteLine($"\n\tThe exercise information is: ");
+
+                    foreach (var ealink in assignment.exerciseAssignment_Links)
+                    {
+                        foreach (var exercise in context.exercises.Where(e => e.number == ealink.ExerciseNumber))
+                        {
+                            Console.WriteLine($"\t\t{exercise}");
+                        }
+                    }
+
                 }
             }
 
@@ -471,13 +579,63 @@ namespace EF_core_Assignment
 
         static void InfoFromStudent(AppDbContext context)
         {
-            
+            System.Console.WriteLine("AuID of the given student. Eg. \"201806493\"");
+            var auid = Console.ReadLine();
+            int.TryParse(auid, out int auid_int);
+
+            foreach (var student in context.students
+                .Where(s => s.AuID == auid_int)
+                .Include(s => s.StudentReq)
+                .ToList())
+            {
+                System.Console.WriteLine($"\nThe requests for student: {student}");
+
+                foreach (var helpreq in student.StudentReq)
+                {
+                    foreach (var ass in context.assignments
+                        .Where(a => a.AssignmentId == helpreq.AssignmentId)
+                        .Include(a => a.exerciseAssignment_Links)
+                        .ToList())
+                    {
+                        System.Console.WriteLine($"\tThe assignment information is: {ass}");
+
+                        Console.WriteLine($"\n\tThe exercise information is: ");
+
+                        foreach (var ealink in ass.exerciseAssignment_Links)
+                        {
+                            foreach (var exercise in context.exercises.Where(e => e.number == ealink.ExerciseNumber))
+                            {
+                                Console.WriteLine($"\t\t{exercise}");
+                            }
+                        }
+                    }
+                }
+                
+            }
+
+            Console.WriteLine();
+        }
+
+
+        static void Statistics(AppDbContext context)
+        {
+            System.Console.WriteLine("Statistics");
+
+
+            foreach (var course in context.courses
+                .Include(c => c.Exercises)
+                .ToList())
+            {
+                System.Console.WriteLine($"Number of open requests in {course.name}: {course.Exercises.Count()}");
+            }
+
+            Console.WriteLine();
         }
 
 
         private static void SeedDatabase(AppDbContext context)
         {
-            context.Database.EnsureDeleted();
+            //context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
 
             // STUDENTS \\
@@ -707,6 +865,37 @@ namespace EF_core_Assignment
             exercise2.Student = student2;
             exercise3.Student = student3;
 
+            // Exercises to Assignments \\
+            exercise1.exerciseAssignment_Links = new List<ExerciseAssignment_link>()
+            {
+                                        new ExerciseAssignment_link()
+                                        {
+                                            Assignment = assignment1,
+                                        AssignmentId = assignment1.AssignmentId,
+                                        Exercise = exercise1,
+                                        ExerciseNumber = exercise1.number
+                                        }};
+
+            exercise2.exerciseAssignment_Links = new List<ExerciseAssignment_link>()
+            {
+                                        new ExerciseAssignment_link()
+                                        {
+                                            Assignment = assignment2,
+                                        AssignmentId = assignment2.AssignmentId,
+                                        Exercise = exercise2,
+                                        ExerciseNumber = exercise2.number
+                                        }};
+
+            exercise3.exerciseAssignment_Links = new List<ExerciseAssignment_link>()
+            {
+                                        new ExerciseAssignment_link()
+                                        {
+                                            Assignment = assignment3,
+                                        AssignmentId = assignment3.AssignmentId,
+                                        Exercise = exercise3,
+                                        ExerciseNumber = exercise3.number
+                                        }};
+
             // Exercises to Teacher \\
             exercise1.Teacher = teacher1;
             exercise2.Teacher = teacher2;
@@ -782,37 +971,44 @@ namespace EF_core_Assignment
             assignment3.Course = course3;
             assignment3.courseId = course3.courseId;
 
+            // Assignments to exercises
+            assignment1.exerciseAssignment_Links = exercise1.exerciseAssignment_Links;
+            assignment2.exerciseAssignment_Links = exercise2.exerciseAssignment_Links;
+            assignment3.exerciseAssignment_Links = exercise3.exerciseAssignment_Links;
+
 
             /////////////////
             //   CONTEXT   //
             /////////////////
+            try
+            {
+                context.Add(student1);
+                context.Add(student2);
+                context.Add(student3);
 
-            context.Add(student1);
-            context.Add(student2);
-            context.Add(student3);
+                context.Add(course1);
+                context.Add(course2);
+                context.Add(course3);
 
-            context.Add(course1);
-            context.Add(course2);
-            context.Add(course3);
+                context.Add(teacher1);
+                context.Add(teacher2);
+                context.Add(teacher3);
 
-            context.Add(teacher1);
-            context.Add(teacher2);
-            context.Add(teacher3);
+                context.Add(exercise1);
+                context.Add(exercise2);
+                context.Add(exercise3);
 
-            context.Add(exercise1);
-            context.Add(exercise2);
-            context.Add(exercise3);
+                context.Add(assignment1);
+                context.Add(assignment2);
+                context.Add(assignment3);
 
-            context.Add(assignment1);
-            context.Add(assignment2);
-            context.Add(assignment3);
-
-            //context.Add(request1);
-            //context.Add(request2);
-            //context.Add(request3);
-
-            context.SaveChanges();
-            System.Console.WriteLine("Data has been seeded");
+                context.SaveChanges();
+                System.Console.WriteLine("Data has been seeded");
+            } 
+            catch
+            {
+                System.Console.WriteLine("Data already exists");
+            }
         }
     }    
 }

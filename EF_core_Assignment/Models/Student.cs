@@ -17,7 +17,6 @@ namespace EF_core_Assignment.Models
 
         public List<Exercise> Exercises { get; set; }
         public List<Attends_shadowtab> attendsCourses { get; set; }
-        //public List<Assignment> Assignments { get; set; }
 
         //Junction table between Student and Assignment with N-N relationship
         public List<HelpRequest_shadowtab> StudentReq { get; set; }

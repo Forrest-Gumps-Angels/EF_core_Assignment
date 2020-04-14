@@ -19,9 +19,7 @@ namespace EF_core_Assignment.Data
 
         protected override void OnModelCreating(ModelBuilder mb)
         {
-            //Creating composite keys 
-            mb.Entity<Exercise>()
-                .HasKey(a => new { a.lecture, a.number });
+
 
             //Creating N - N relationship
             mb.Entity<Attends_shadowtab>()
@@ -51,6 +49,24 @@ namespace EF_core_Assignment.Data
                 .HasOne(hps => hps.Assignment)
                 .WithMany(a => a.AssignmentReq)
                 .HasForeignKey(hps => hps.AssignmentId);
+
+
+            /*
+             * Creating N-N relation between Assignment and
+             * Exercise via junction table
+             */
+            mb.Entity<ExerciseAssignment_link>()
+                .HasKey(ea => new { ea.AssignmentId, ea.ExerciseNumber });
+
+            mb.Entity<ExerciseAssignment_link>()
+                .HasOne(ea => ea.Assignment)
+                .WithMany(a => a.exerciseAssignment_Links)
+                .HasForeignKey(ea => ea.AssignmentId);
+
+            mb.Entity<ExerciseAssignment_link>()
+                .HasOne(ea => ea.Exercise)
+                .WithMany(e => e.exerciseAssignment_Links)
+                .HasForeignKey(ea => ea.ExerciseNumber);
         }
 
 
