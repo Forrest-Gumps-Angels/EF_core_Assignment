@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EF_core_Assignment.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200420104503_FirstMigration")]
+    [Migration("20200420110328_FirstMigration")]
     partial class FirstMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

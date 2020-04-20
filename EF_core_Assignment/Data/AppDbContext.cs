@@ -73,6 +73,6 @@ namespace EF_core_Assignment.Data
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-                => options.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=efcoreass2;Integrated Security=True").EnableSensitiveDataLogging();
+                => options.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=efcoreass2v2;Integrated Security=True").EnableSensitiveDataLogging();
     }
 }
