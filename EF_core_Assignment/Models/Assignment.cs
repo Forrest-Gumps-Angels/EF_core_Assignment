@@ -12,6 +12,8 @@ namespace EF_core_Assignment.Models
 
         public string AssignmentName { get; set; }
 
+        public bool open { get; set; }
+
 
         public int courseId { get; set; }
         public Course Course { get; set; }
@@ -21,7 +23,8 @@ namespace EF_core_Assignment.Models
 
         //Junction table between Student and Assignment with N-N relationship
         public List<HelpRequest_shadowtab> AssignmentReq { get; set; }
-        public List<ExerciseAssignment_link> exerciseAssignment_Links { get; set; }
+
+        
 
 
 

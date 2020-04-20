@@ -8,7 +8,6 @@ namespace EF_core_Assignment.Models
 {
     public class Exercise
     {
-        // Defined as composite key in fluent api
         [MaxLength(64)]
         public string lecture { get; set; }
 
@@ -19,8 +18,7 @@ namespace EF_core_Assignment.Models
 
         [MaxLength(128)]
         public string help_where { get; set; }
-
-        public List<ExerciseAssignment_link> exerciseAssignment_Links { get; set; }
+        public bool open { get; set; }
 
         public int teacherAuId { get; set; }
         public Teacher Teacher { get; set; }

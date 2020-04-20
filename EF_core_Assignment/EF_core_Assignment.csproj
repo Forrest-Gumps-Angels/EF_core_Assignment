@@ -6,6 +6,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\Attends.cs" />
+    <Compile Remove="Models\ExerciseAssignment_link.cs" />
+    <Compile Remove="Models\HelpRequest.cs" />
+    <Compile Remove="Seeding.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Data\NewFile1.txt" />
     <None Remove="Models\NewFile1.txt" />
   </ItemGroup>
 

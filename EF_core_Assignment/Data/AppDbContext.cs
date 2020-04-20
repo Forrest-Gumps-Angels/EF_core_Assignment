@@ -51,48 +51,30 @@ namespace EF_core_Assignment.Data
                 .HasForeignKey(hps => hps.AssignmentId);
 
 
-            /*
-             * Creating N-N relation between Assignment and
-             * Exercise via junction table
-             */
-            mb.Entity<ExerciseAssignment_link>()
-                .HasKey(ea => new { ea.AssignmentId, ea.ExerciseNumber });
+            //// On delete cascade fix
+            //mb.Entity<Assignment>()
+            //    .HasOne(a => a.Teacher)
+            //    .WithMany(t => t.Assignments)
+            //    .HasForeignKey(a => a.teacherAuId)
+            //    .OnDelete(DeleteBehavior.NoAction);
 
-            mb.Entity<ExerciseAssignment_link>()
-                .HasOne(ea => ea.Assignment)
-                .WithMany(a => a.exerciseAssignment_Links)
-                .HasForeignKey(ea => ea.AssignmentId);
+            //mb.Entity<Exercise>()
+            //    .HasOne(a => a.Teacher)
+            //    .WithMany(t => t.Exercises)
+            //    .HasForeignKey(a => a.teacherAuId)
+            //    .OnDelete(DeleteBehavior.NoAction);
 
-            mb.Entity<ExerciseAssignment_link>()
-                .HasOne(ea => ea.Exercise)
-                .WithMany(e => e.exerciseAssignment_Links)
-                .HasForeignKey(ea => ea.ExerciseNumber);
-
-            // On delete cascade fix
-            mb.Entity<Assignment>()
-                .HasOne(a => a.Teacher)
-                .WithMany(t => t.Assignments)
-                .HasForeignKey(a => a.teacherAuId)
-                .OnDelete(DeleteBehavior.NoAction);
-
-            mb.Entity<Exercise>()
-                .HasOne(a => a.Teacher)
-                .WithMany(t => t.Exercises)
-                .HasForeignKey(a => a.teacherAuId)
-                .OnDelete(DeleteBehavior.NoAction);
-
-            mb.Entity<ExerciseAssignment_link>()
-                .HasOne(a => a.Exercise)
-                .WithMany(t => t.exerciseAssignment_Links)
-                .HasForeignKey(a => a.ExerciseNumber)
-                .OnDelete(DeleteBehavior.NoAction);
+            //mb.Entity<Teacher>()
+            //    .HasOne(a => a.Course)
+            //    .WithMany(c => c.Teachers)
+            //    .HasForeignKey(c => c.CourseId)
+            //    .OnDelete(DeleteBehavior.NoAction);
 
         }
 
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-                => options.UseSqlServer("Data Source=172.25.181.113,1433;Initial Catalog=Efcore;Persist Security Info=True;User ID=sa;Password='F?G2Qt8E.;<4vzuV'").EnableSensitiveDataLogging();
-
+                => options.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=efcoreass2;Integrated Security=True").EnableSensitiveDataLogging();
     }
 }
