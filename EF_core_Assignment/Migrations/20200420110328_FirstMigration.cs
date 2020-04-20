@@ -2,7 +2,7 @@
 
 namespace EF_core_Assignment.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class FirstMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -46,8 +46,7 @@ namespace EF_core_Assignment.Migrations
                         name: "FK_teachers_courses_CourseId",
                         column: x => x.CourseId,
                         principalTable: "courses",
-                        principalColumn: "courseId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "courseId");
                 });
 
             migrationBuilder.CreateTable(
@@ -99,8 +98,7 @@ namespace EF_core_Assignment.Migrations
                         name: "FK_assignments_teachers_teacherAuId",
                         column: x => x.teacherAuId,
                         principalTable: "teachers",
-                        principalColumn: "AuID",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "AuID");
                 });
 
             migrationBuilder.CreateTable(
@@ -134,8 +132,7 @@ namespace EF_core_Assignment.Migrations
                         name: "FK_exercises_teachers_teacherAuId",
                         column: x => x.teacherAuId,
                         principalTable: "teachers",
-                        principalColumn: "AuID",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "AuID");
                 });
 
             migrationBuilder.CreateTable(

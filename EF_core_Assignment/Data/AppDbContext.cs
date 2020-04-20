@@ -51,23 +51,6 @@ namespace EF_core_Assignment.Data
                 .HasForeignKey(hps => hps.AssignmentId);
 
 
-            /*
-             * Creating N-N relation between Assignment and
-             * Exercise via junction table
-             */
-            mb.Entity<ExerciseAssignment_link>()
-                .HasKey(ea => new { ea.AssignmentId, ea.ExerciseNumber });
-
-            mb.Entity<ExerciseAssignment_link>()
-                .HasOne(ea => ea.Assignment)
-                .WithMany(a => a.exerciseAssignment_Links)
-                .HasForeignKey(ea => ea.AssignmentId);
-
-            mb.Entity<ExerciseAssignment_link>()
-                .HasOne(ea => ea.Exercise)
-                .WithMany(e => e.exerciseAssignment_Links)
-                .HasForeignKey(ea => ea.ExerciseNumber);
-
             // On delete cascade fix
             mb.Entity<Assignment>()
                 .HasOne(a => a.Teacher)
@@ -81,18 +64,15 @@ namespace EF_core_Assignment.Data
                 .HasForeignKey(a => a.teacherAuId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            mb.Entity<ExerciseAssignment_link>()
-                .HasOne(a => a.Exercise)
-                .WithMany(t => t.exerciseAssignment_Links)
-                .HasForeignKey(a => a.ExerciseNumber)
+            mb.Entity<Teacher>()
+                .HasOne(a => a.Course)
+                .WithMany(c => c.Teachers)
+                .HasForeignKey(c => c.CourseId)
                 .OnDelete(DeleteBehavior.NoAction);
 
         }
 
-
-
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-                => options.UseSqlServer("Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=efcoreass;Integrated Security=True").EnableSensitiveDataLogging();
-
+                => options.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=efcoreass2v2;Integrated Security=True").EnableSensitiveDataLogging();
     }
 }

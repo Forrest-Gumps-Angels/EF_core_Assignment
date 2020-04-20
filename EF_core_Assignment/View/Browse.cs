@@ -56,40 +56,34 @@ namespace EF_core_Assignment.View
             int.TryParse(auid, out int auid_int);
 
 
-            foreach (var teacher in context.teachers.Where(t => t.AuID == auid_int).ToList())
+            foreach (var teacher in context.teachers.Where(t => t.AuID == auid_int)
+                .Include(t => t.Assignments).ThenInclude(a => a.AssignmentReq).ThenInclude(ar => ar.Student)
+                .Include(t => t.Exercises)
+                .Include(t => t.Course)
+                .Include(t => t.Assignments)
+                .ToList())
             {
                 System.Console.WriteLine($"\nThe requests for teacher: {teacher}");
+                System.Console.WriteLine($"\tThe course information is: {teacher.Course}");
 
 
-                foreach (var assignment in context.assignments
-                    .Where(a => a.teacherAuId == teacher.AuID)
-                    .Include(assign => assign.Course)
-                    .Include(assign => assign.AssignmentReq)
-                    .ToList())
+                foreach (var assignment in teacher.Assignments)
                 {
                     System.Console.WriteLine($"\tThe assignment information is: {assignment}");
-                    System.Console.WriteLine($"\tThe course information is: {assignment.Course}");
-
                     Console.WriteLine($"\n\tThe students are: ");
 
-                    //WORKS!
-                    foreach (var asReq in assignment.AssignmentReq)
+                    foreach (var asreq in assignment.AssignmentReq)
                     {
-                        foreach (var stud in context.students.Where(s => s.AuID == asReq.StudentId))
-                        {
-                            Console.WriteLine($"\t\t{stud}");
-                        }
+                        Console.WriteLine($"\t\t{asreq.Student}");
                     }
 
-                    Console.WriteLine($"\n\tThe exercise information is: ");
+                }
 
-                //    foreach (var ealink in assignment.exerciseAssignment_Links)
-                //    {
-                //        foreach (var exercise in context.exercises.Where(e => e.number == ealink.ExerciseNumber))
-                //        {
-                //            Console.WriteLine($"\t\t{exercise}");
-                //        }
-                //    }
+                foreach (var exercise in teacher.Exercises)
+                {
+                    Console.WriteLine($"\n\tThe exercise information is: {exercise} ");
+
+                    Console.WriteLine($"\n\tThe student is: {exercise.Student}");
                 }
             }
 
@@ -101,16 +95,16 @@ namespace EF_core_Assignment.View
             System.Console.WriteLine("Coursename of the given course. Eg. \"NGK\"");
             var coursename = Console.ReadLine();
 
-            foreach (var course in context.courses.Where(a => a.name.Contains(coursename)).ToList())
+            foreach (var course in context.courses.Where(a => a.name.Contains(coursename))
+                .Include(c => c.Assignments).ThenInclude(a => a.Teacher)
+                .Include(c => c.Assignments).ThenInclude(a => a.AssignmentReq).ThenInclude(ar => ar.Student)
+                .Include(c => c.Exercises)
+                .ToList())
             {
                 System.Console.WriteLine($"\nThe requests for course: {course}");
 
 
-                foreach (var assignment in context.assignments
-                    .Where(a => a.courseId == course.courseId)
-                    .Include(assign => assign.Teacher)
-                    .Include(assign => assign.AssignmentReq)
-                    .ToList())
+                foreach (var assignment in course.Assignments)
                 {
                     System.Console.WriteLine($"\tThe assignment information is: {assignment}");
                     System.Console.WriteLine($"\tThe responsible teacher information is: {assignment.Teacher}");
@@ -120,23 +114,17 @@ namespace EF_core_Assignment.View
                     //WORKS!
                     foreach (var asReq in assignment.AssignmentReq)
                     {
-                        foreach (var stud in context.students.Where(s => s.AuID == asReq.StudentId))
-                        {
-                            Console.WriteLine($"\t\t{stud}");
-                        }
+                        Console.WriteLine($"\t\t{asReq.Student}");
                     }
 
-                    Console.WriteLine($"\n\tThe exercise information is: ");
+                    foreach (var exercise in course.Exercises)
+                    {
+                        Console.WriteLine($"\n\tThe exercise information is: {exercise} ");
 
-                        //foreach (var ealink in assignment.exerciseAssignment_Links)
-                        //{
-                        //    foreach (var exercise in context.exercises.Where(e => e.number == ealink.ExerciseNumber))
-                        //    {
-                        //        Console.WriteLine($"\t\t{exercise}");
-                        //    }
-                        //}
-
+                        Console.WriteLine($"\n\tThe student is: {exercise.Student}");
                     }
+
+                }
             }
 
             Console.WriteLine();
@@ -150,28 +138,25 @@ namespace EF_core_Assignment.View
 
             foreach (var student in context.students
                 .Where(s => s.AuID == auid_int)
-                .Include(s => s.StudentReq)
+                .Include(s => s.StudentReq).ThenInclude(sr => sr.Assignment)
+                .Include(s => s.Exercises).ThenInclude(e => e.Course)
                 .ToList())
             {
                 System.Console.WriteLine($"\nThe requests for student: {student}");
 
                 foreach (var helpreq in student.StudentReq)
                 {
-                    foreach (var ass in context.assignments
-                        .Where(a => a.AssignmentId == helpreq.AssignmentId).ToList())
-                    {
-                        System.Console.WriteLine($"\tThe assignment information is: {ass}");
+                    System.Console.WriteLine($"\tThe assignment information is: {helpreq.Assignment}");
 
-                        Console.WriteLine($"\n\tThe exercise information is: ");
+                    Console.WriteLine($"\n\tThe exercise information is: ");
 
-                        //foreach (var ealink in ass.exerciseAssignment_Links)
-                        //{
-                        //    foreach (var exercise in context.exercises.Where(e => e.number == ealink.ExerciseNumber))
-                        //    {
-                        //        Console.WriteLine($"\t\t{exercise}");
-                        //    }
-                        //}
-                    }
+                }
+
+                foreach (var exercise in student.Exercises)
+                {
+                    Console.WriteLine($"\n\tThe exercise information is: {exercise} ");
+
+                    Console.WriteLine($"\n\tThe course is: {exercise.Course}");
                 }
 
             }

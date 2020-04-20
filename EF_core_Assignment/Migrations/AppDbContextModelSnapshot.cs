@@ -177,7 +177,7 @@ namespace EF_core_Assignment.Migrations
                     b.HasOne("EF_core_Assignment.Models.Teacher", "Teacher")
                         .WithMany("Assignments")
                         .HasForeignKey("teacherAuId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
@@ -213,7 +213,7 @@ namespace EF_core_Assignment.Migrations
                     b.HasOne("EF_core_Assignment.Models.Teacher", "Teacher")
                         .WithMany("Exercises")
                         .HasForeignKey("teacherAuId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
@@ -237,7 +237,7 @@ namespace EF_core_Assignment.Migrations
                     b.HasOne("EF_core_Assignment.Models.Course", "Course")
                         .WithMany("Teachers")
                         .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 #pragma warning restore 612, 618
