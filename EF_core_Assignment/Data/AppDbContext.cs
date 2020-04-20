@@ -92,7 +92,7 @@ namespace EF_core_Assignment.Data
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-                => options.UseSqlServer("Data Source=172.25.181.113,1433;Initial Catalog=Efcore;Persist Security Info=True;User ID=sa;Password='F?G2Qt8E.;<4vzuV'").EnableSensitiveDataLogging();
+                => options.UseSqlServer("Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=efcoreass;Integrated Security=True").EnableSensitiveDataLogging();
 
     }
 }
