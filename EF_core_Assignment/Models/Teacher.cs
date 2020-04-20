@@ -8,7 +8,6 @@ namespace EF_core_Assignment.Models
 {
     public class Teacher
     {
-        [Required]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int AuID { get; set; }
@@ -17,12 +16,9 @@ namespace EF_core_Assignment.Models
 
 
         public List<Exercise> Exercises { get; set; }
-
         public int CourseId { get; set; }
         public Course Course { get; set; }
-
         public List<Assignment> Assignments { get; set; }
-
 
 
         public override string ToString()

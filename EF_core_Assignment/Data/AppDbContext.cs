@@ -51,28 +51,26 @@ namespace EF_core_Assignment.Data
                 .HasForeignKey(hps => hps.AssignmentId);
 
 
-            //// On delete cascade fix
-            //mb.Entity<Assignment>()
-            //    .HasOne(a => a.Teacher)
-            //    .WithMany(t => t.Assignments)
-            //    .HasForeignKey(a => a.teacherAuId)
-            //    .OnDelete(DeleteBehavior.NoAction);
+            // On delete cascade fix
+            mb.Entity<Assignment>()
+                .HasOne(a => a.Teacher)
+                .WithMany(t => t.Assignments)
+                .HasForeignKey(a => a.teacherAuId)
+                .OnDelete(DeleteBehavior.NoAction);
 
-            //mb.Entity<Exercise>()
-            //    .HasOne(a => a.Teacher)
-            //    .WithMany(t => t.Exercises)
-            //    .HasForeignKey(a => a.teacherAuId)
-            //    .OnDelete(DeleteBehavior.NoAction);
+            mb.Entity<Exercise>()
+                .HasOne(a => a.Teacher)
+                .WithMany(t => t.Exercises)
+                .HasForeignKey(a => a.teacherAuId)
+                .OnDelete(DeleteBehavior.NoAction);
 
-            //mb.Entity<Teacher>()
-            //    .HasOne(a => a.Course)
-            //    .WithMany(c => c.Teachers)
-            //    .HasForeignKey(c => c.CourseId)
-            //    .OnDelete(DeleteBehavior.NoAction);
+            mb.Entity<Teacher>()
+                .HasOne(a => a.Course)
+                .WithMany(c => c.Teachers)
+                .HasForeignKey(c => c.CourseId)
+                .OnDelete(DeleteBehavior.NoAction);
 
         }
-
-
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
                 => options.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=efcoreass2;Integrated Security=True").EnableSensitiveDataLogging();
